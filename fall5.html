@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <title>فتاح فال الحكيم (النسخة النهائية)</title>
+    <title>فتاح فال (النسخة المصفّحة)</title>
     <meta charset="UTF-8">
     <style>
         body { font-family: 'Tahoma', sans-serif; text-align: center; background-color: #1a252f; color: #ecf0f1; padding: 20px; }
         .container { background-color: #2c3e50; padding: 30px; border-radius: 15px; max-width: 500px; margin: auto; box-shadow: 0 0 25px rgba(0,0,0,0.7); border: 1px solid #f1c40f; }
-        .logo { width: 120px; margin-bottom: 10px; }
+        
+        /* --- تعديل ستايل اللوگو --- */
+        .logo-container {
+            background-color: rgba(255, 255, 255, 0.1); /* هالة بيضاء شفافة */
+            border-radius: 50%; /* نسويها دائرية */
+            padding: 10px;
+            width: 130px; /* حجم الدائرة */
+            height: 130px;
+            margin: 0 auto 15px auto; /* توسيط وتنزيل */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .logo {
+            width: 110px; /* حجم اللوگو بداخل الدائرة */
+        }
+        /* ------------------------- */
+
         h1 { color: #f1c40f; text-shadow: 0 0 5px #f1c40f; margin-top: 0; }
         input, select { width: 85%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #7f8c8d; font-size: 16px; text-align: center; background-color: #34495e; color: #ecf0f1; }
         button { font-size: 22px; padding: 12px 25px; cursor: pointer; background-color: #f1c40f; color: #2c3e50; border: none; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
@@ -19,15 +36,15 @@
 
     <div class="container">
         
-        <!-- ===== الشعار يقرأ من GitHub مباشرة ===== -->
-        <img src="logo.png" alt="شعار فتاح فال الحكيم" class="logo">
-        <!-- ======================================= -->
+        <div class="logo-container">
+            <img src="logo.png" alt="شعار فتاح فال الحكيم" class="logo">
+        </div>
 
         <h1>فتاح فال الحكيم</h1>
         <p>للأعمار بين 6 و 100 سنة فقط</p>
 
         <input type="text" id="userName" placeholder="اكتب اسمك الأول">
-        <input type="number" id="birthDay" placeholder="يوم الميلاد (1-31)">
+        <input type="number" id="birthDay" placeholder="يوم الميلاد">
         <select id="birthMonth">
             <option value="">اختر شهر الميلاد</option>
             <option value="1">1</option> <option value="2">2</option> <option value="3">3</option>
@@ -35,7 +52,7 @@
             <option value="7">7</option> <option value="8">8</option> <option value="9">9</option>
             <option value="10">10</option> <option value="11">11</option> <option value="12">12</option>
         </select>
-        <input type="number" id="birthYear" placeholder="سنة الميلاد (مثلاً: 1995)">
+        <input type="number" id="birthYear" placeholder="سنة الميلاد">
 
         <p id="error-message"></p>
 
@@ -47,15 +64,40 @@
     <script>
         const falat = ["شي چنت شايل همه راح يتسهل بأمر الله، بس يحتاج شوية صبر.", "باب رزق جديد راح ينفتح گدامك من حيث لا تحتسب، خلي عينك مفتوحة.", "شخص بعيد يفكر بيك ويتمنى لك الخير، راح يوصلك خبر منه عن قريب.", "عندك طاقة جبيرة بداخلك، إذا استغليتها صح راح تسوي شي چبير.", "حچاية راح تسمعها بالصدفة بيها إشارة لموضوع يخصك، انتبه زين.", "لا تظل تفكر بالماضي هواي، الخير كله جاي بالطريق اللي گدامك.", "صديق قديم راح يرجع لحياتك ويجيب وياه فرصة حلوة.", "قرار مهم لازم تاخذه، استخير ربك و توكل، اللي ببالك صحيح.", " اكو حسد و عين عليك، حصن نفسك بذكر الله و الامور تمشي.", "راح تتوضحلك حقيقة چانت غايبة عنك، وراها راح ترتاح.", "مشوار صغير راح تطلعه بيه فايدة جبيرة ما متوقعها.", "صحتك أمانة، دير بالك عليها هالأيام، لا تهمل أي إشارة.", "راح تتغلب على شخص چان يضايقك، والحق راح يرجعلك.", "مبلغ من الفلوس راح يوصلك، مو چبير بس راح يحل أزمة.", "گلبك دليلك، امشي ورا إحساسك هالفترة، مراح يخيبك.", "لا تأمن بكل واحد يضحك بوجهك، خليك حذر بس بدون وسواس.", "حلم چنت تحلمه راح تبدي تشوف أول خطوات تحقيقه.", "مشكلة عائلية راح تنحل بفضل حچايتك الحلوة وتفهمك.", "أخبار مفرحة تخص شخص عزيز عليك راح توصلك وتفرحك وياه.", "وقتك ثمين، لا تضيعه ويه ناس ما تستاهل، ركز على أهدافك."];
         function calculateNameValue(name) { let value = 0; for (let i = 0; i < name.length; i++) { value += name.charCodeAt(i) * (i + 1); } return value; }
+        
+        // *** دالة جديدة لمعرفة عدد أيام الشهر ***
+        function getDaysInMonth(month, year) {
+            // شهر 2 (شباط) حالة خاصة
+            if (month === 2) {
+                // إذا السنة كبيسة (تقبل القسمة على 4 بدون باقي) فهي 29 يوم
+                return (year % 4 === 0) ? 29 : 28;
+            } 
+            // الأشهر اللي بيها 30 يوم
+            else if ([4, 6, 9, 11].includes(month)) {
+                return 30;
+            } 
+            // باقي الأشهر 31 يوم
+            else {
+                return 31;
+            }
+        }
+
         function openFal() {
             const name = document.getElementById('userName').value; const day = document.getElementById('birthDay').value; const month = document.getElementById('birthMonth').value; const year = document.getElementById('birthYear').value; const errorMsg = document.getElementById('error-message'); const falDisplay = document.getElementById('fal-display');
             if (!name || !day || !month || !year) { errorMsg.innerText = "خويه لازم تملي كل الحقول الأربعة!"; falDisplay.innerText = ""; return; }
             
-            // *** التحقق من صحة اليوم والشهر ***
-            const dayNum = parseInt(day); const monthNum = parseInt(month);
-            if (dayNum < 1 || dayNum > 31 || monthNum < 1 || monthNum > 12) {
-                errorMsg.innerText = "خويه تأكد من اليوم والشهر، لا تشمر أرقام بكيفك!";
+            const dayNum = parseInt(day); const monthNum = parseInt(month); const yearNum = parseInt(year);
+
+            // *** التحقق الشامل من صحة التاريخ ***
+            if (dayNum < 1 || monthNum < 1 || monthNum > 12 || yearNum < 1920) {
+                errorMsg.innerText = "خويه تأكد من التاريخ، لا تشمر أرقام بكيفك!";
                 falDisplay.innerText = "🤔"; return;
+            }
+            // نتأكد إن اليوم مناسب للشهر
+            const maxDays = getDaysInMonth(monthNum, yearNum);
+            if (dayNum > maxDays) {
+                errorMsg.innerText = `يا أثول! شهر ${monthNum} بيه ${maxDays} يوم بس! منين جبت هذا اليوم؟`;
+                falDisplay.innerText = "😂"; return;
             }
             // **********************************
 
@@ -64,7 +106,7 @@
             let age = today.getFullYear() - inputDate.getFullYear(); const monthDifference = today.getMonth() - inputDate.getMonth(); if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < inputDate.getDate())) { age--; }
             if (age < 6) { errorMsg.innerText = "بعد وكت على هاي السوالف يا بابا!"; falDisplay.innerText = "🧸 روح العب ويه جهال الفرع"; return; }
             if (age > 100) { errorMsg.innerText = "حجينا/حجيتنا، أنت الخير والبركة!"; falDisplay.innerText = "🧓 وجودك هو أحلى فال بالدنيا"; return; }
-            errorMsg.innerText = ""; const nameValue = calculateNameValue(name); const yearNum = parseInt(year);
+            errorMsg.innerText = ""; const nameValue = calculateNameValue(name);
             let finalNumber = (nameValue * 17) + (dayNum * 31) + (monthNum * 13) + (yearNum * 7); const falIndex = finalNumber % falat.length; const yourFal = falat[falIndex];
             falDisplay.innerText = "جاري استشارة الحكماء..."; setTimeout(function() { falDisplay.innerText = yourFal; }, 1500);
         }
